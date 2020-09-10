@@ -6,6 +6,7 @@ import data from './data';
 import Navigation from './components/Navigation';
 import Products from './components/Products';
 import ShoppingCart from './components/ShoppingCart';
+import { ProductContext, CartContext } from './contexts';
 
 function App() {
 	const [products] = useState(data);
@@ -13,20 +14,30 @@ function App() {
 
 	const addItem = item => {
 		// add the given item to the cart
+		setCart([...cart, item]);
 	};
+
+	const removeItem = id => {
+		setCart(cart.filter(item => item.id !== id)); // return all items currently in state EXCEPT the one we're removing
+	}
 
 	return (
 		<div className="App">
-			<Navigation cart={cart} />
+			
+			<CartContext.Provider value={{cart, removeItem}}>
+				<Navigation />
+
+				<Route path="/cart">
+					<ShoppingCart />
+				</Route>
+			</CartContext.Provider>
 
 			{/* Routes */}
-			<Route exact path="/">
-				<Products products={products} addItem={addItem} />
-			</Route>
-
-			<Route path="/cart">
-				<ShoppingCart cart={cart} />
-			</Route>
+			<ProductContext.Provider value={{products, addItem}}>
+				<Route exact path="/">
+					<Products />
+				</Route>
+			</ProductContext.Provider>
 		</div>
 	);
 }
