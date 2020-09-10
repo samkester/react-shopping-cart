@@ -17,10 +17,14 @@ function App() {
 		setCart([...cart, item]);
 	};
 
+	const removeItem = id => {
+		setCart(cart.filter(item => item.id !== id)); // return all items currently in state EXCEPT the one we're removing
+	}
+
 	return (
 		<div className="App">
 			
-			<CartContext.Provider value={{cart}}>
+			<CartContext.Provider value={{cart, removeItem}}>
 				<Navigation />
 
 				<Route path="/cart">
